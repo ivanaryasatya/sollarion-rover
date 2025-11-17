@@ -1,6 +1,10 @@
+#ifndef RADIOCOM_H
+#define RADIOCOM_H
+
 #include <SPI.h>
 #include <RF24.h>
-// #include "NRF24Radio.h"
+// #include "NRF24Radio.h"  
+
 
 class NRF24Radio {
 private:
@@ -58,29 +62,4 @@ public:
         radio.openReadingPipe(1, address);
     }
 };
-
-
-
-NRF24Radio radio(7, 8, "NODE1");  // CE, CSN, address
-
-void setup() {
-  Serial.begin(9600);
-
-  if (radio.begin(true)) {
-    Serial.println("Transmitter siap!");
-  } else {
-    Serial.println("Gagal inisialisasi NRF24.");
-  }
-}
-
-void loop() {
-  const char msg[] = "Halo Ivan!";
-
-  if (radio.send(msg, sizeof(msg))) {
-    Serial.println("Terkirim!");
-  } else {
-    Serial.println("Gagal kirim!");
-  }
-
-  delay(1000);
-}
+#endif
