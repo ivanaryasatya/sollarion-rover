@@ -1,2 +1,2 @@
 # sollarion-rover
-A Solar Powered Roved with Arduino
+A Solar Powered Rover with Arduino
