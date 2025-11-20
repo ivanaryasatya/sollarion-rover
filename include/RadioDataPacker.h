@@ -39,11 +39,11 @@ public:
         int currentIndex = 0;
         int start = 0;
 
-        for (int i = 0; i < input.length(); i++) {
+        for (unsigned int i = 0; i < input.length(); i++) {
             if (input[i] == '#') {
                 if (currentIndex == index) {
                     String segment = input.substring(start, i);
-                    int pos = 0;
+                    unsigned int pos = 0;
                     while (pos < segment.length() && !isDigit(segment[pos])) {
                         pos++;
                     }
