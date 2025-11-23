@@ -1,5 +1,4 @@
-#ifndef DUALJOYSTICK_H
-#define DUALJOYSTICK_H
+#pragma once
 #include <Arduino.h>
 
 class DualJoystick { //joystick ganda
@@ -37,5 +36,3 @@ public:
   int getX2() { return x2; }
   int getY2() { return y2; }
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef RADIOCOMCODE_H
-#define RADIOCOMCODE_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -10,5 +9,3 @@ joystick2_x = 'X',
 joystick2_y = 'Y'
 
 ;
-
-#endif

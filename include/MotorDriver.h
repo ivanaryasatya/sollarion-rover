@@ -1,37 +1,4 @@
-
-/* 
-EXAMPLE:
-#include "MotorDriver.h"
-
-// L298N #1 (LEFT) → IN1, IN2, ENA
-// L298N #2 (RIGHT) → IN3, IN4, ENB
-MotorDriver motor(22, 23, 2,   // kiri (IN1, IN2, ENA)
-                  24, 25, 3);  // kanan(IN3, IN4, ENB)
-
-void setup() {
-    motor.begin();
-}
-
-void loop() {
-
-    // maju lurus
-    motor.forward(200, 200);
-
-    delay(2000);
-
-    // belok kanan sambil maju
-    // steer = 150 → roda kanan dikurangi 150
-    motor.driveForwardWithSteer(200, 150);
-
-    delay(2000);
-
-    motor.stopAll();
-    delay(2000);
-}
-
-*/
-#ifndef MOTORDRIVER_H
-#define MOTORDRIVER_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -150,4 +117,3 @@ public:
     }
 };
 
-#endif

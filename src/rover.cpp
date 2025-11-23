@@ -1,18 +1,18 @@
 #include <Arduino.h>
 
 // custom library
-#include "FIrebaseCom.h"
 #include "MotorDriver.h"
 #include "RadioDataPacker.h"
 #include "RadioCom.h"
 #include "TempSensor.h"
+#include "Mega2560Pin.h"
 
 // pins ==============================================
 const byte tempSensorPin = A0;
 const byte RF24_ce_pin   = 7;
 const byte RF24_csn_pin  = 8;
 
-const byte driver_right_in1_pin = 22;
+const byte driver_right_in1_pin = D22;
 const byte driver_right_in2_pin = 23;
 const byte driver_right_ena_pin = 2;
 const byte driver_left_in1_pin  = 24;

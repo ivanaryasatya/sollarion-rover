@@ -29,8 +29,7 @@ void loop() {
 
 
 
-#ifndef TEMPSENSOR_H
-#define TEMPSENSOR_H
+#pragma once
 
 #include <Arduino.h>
 #include <DHT.h>
@@ -91,7 +90,6 @@ public:
         return dht.computeHeatIndex(temperature, humidity, false); // false = Celcius
     }
 
-    // Mendapatkan semua data sekaligus (opsional)
     void getAll(float &temp, float &hum, float &heatIndex) {
         temp = temperature;
         hum = humidity;
@@ -104,4 +102,3 @@ public:
     }
 };
 
-#endif

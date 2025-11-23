@@ -1,5 +1,4 @@
-#ifndef DATA_PACKER_H
-#define DATA_PACKER_H
+#pragma once
 #include <Arduino.h>
 
 struct Unpacked {
@@ -60,5 +59,3 @@ public:
         return result; // default
     }
 };
-
-#endif

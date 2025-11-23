@@ -1,5 +1,4 @@
-#ifndef RADIOCOM_H
-#define RADIOCOM_H
+#pragma once
 
 #include <SPI.h>
 #include <RF24.h>
@@ -62,4 +61,3 @@ public:
         radio.openReadingPipe(1, address);
     }
 };
-#endif
