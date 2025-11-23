@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 // custom library
+#include "FIrebaseCom.h"
 #include "MotorDriver.h"
 #include "RadioDataPacker.h"
 #include "RadioCom.h"
