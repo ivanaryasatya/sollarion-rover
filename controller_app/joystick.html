@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dual Joystick + 6 Switches</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#06b6d4; --muted:#94a3b8; --glass: rgba(255,255,255,0.03);
+    }
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;color:#e6eef6;background:linear-gradient(180deg,#071025 0%, #071726 100%);}
+    .wrap{max-width:1100px;margin:28px auto;padding:18px;display:grid;grid-template-columns:1fr 420px;gap:18px;align-items:start}
+    .panel{background:var(--card);padding:16px;border-radius:14px;box-shadow:0 6px 18px rgba(2,6,23,0.6);}
+
+    h1{margin:0 0 8px;font-size:18px}
+    p.lead{margin:0 0 12px;color:var(--muted);font-size:13px}
+
+    /* joystick area */
+    .joystick-area{display:flex;justify-content:space-between;gap:18px}
+    .stick-card{flex:1;display:flex;flex-direction:column;gap:12px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:12px}
+
+    .stick-wrap{display:flex;gap:12px;align-items:center}
+    .stick{width:240px;height:240px;position:relative;border-radius:50%;background:var(--glass);display:flex;justify-content:center;align-items:center;touch-action:none}
+    .ring{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(6,182,212,0.06), transparent 25%);display:flex;justify-content:center;align-items:center;position:relative}
+    .knob{width:64px;height:64px;border-radius:50%;background:linear-gradient(180deg,#0ea5b9,#087f8f);box-shadow:0 6px 18px rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;color:white;font-weight:600;user-select:none}
+
+    .axes{width:120px;display:flex;flex-direction:column;gap:8px}
+    .axis-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+    .axis-value{font-weight:700;color:var(--accent)}
+
+    /* switches */
+    .switches{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+    .sw{background:rgba(255,255,255,0.02);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;align-items:center}
+    .toggle{width:54px;height:30px;border-radius:999px;background:#152230;display:flex;padding:4px;cursor:pointer}
+    .toggle .dot{width:22px;height:22px;border-radius:50%;background:#222;box-shadow:0 2px 6px rgba(2,6,23,0.6);transition:transform .15s, background .15s}
+    .toggle.on{background:linear-gradient(90deg,var(--accent),#0ea5b9)}
+    .toggle.on .dot{transform:translateX(24px);background:white}
+
+    /* right column */
+    .right{display:flex;flex-direction:column;gap:12px}
+    .status{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);}
+    pre{white-space:pre-wrap;margin:0;font-size:13px;color:#dff8ff}
+
+    footer{grid-column:1/-1;margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
+
+    /* responsive */
+    @media (max-width:900px){.wrap{grid-template-columns:1fr;}.stick{width:200px;height:200px}.ring{width:160px;height:160px}.knob{width:56px;height:56px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <h1>Dual Joystick (2-axis each) + 6 Switches</h1>
+      <p class="lead">Joystick kanan & kiri masing-masing mengembalikan nilai X dan Y (-100 .. 100). Switch 6 buah berupa toggle. Coba drag/touch joystick atau klik switch.</p>
+
+      <div class="joystick-area">
+        <!-- Left joystick -->
+        <div class="stick-card" id="left-card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>Joystick Kiri</strong>
+            <small style="color:var(--muted)">2 axis</small>
+          </div>
+          <div class="stick-wrap">
+            <div class="stick" id="left-stick" data-side="left">
+              <div class="ring">
+                <div class="knob" id="left-knob">L</div>
+              </div>
+            </div>
+            <div class="axes">
+              <div class="axis-row">X: <span class="axis-value" id="left-x">0</span></div>
+              <div class="axis-row">Y: <span class="axis-value" id="left-y">0</span></div>
+              <div style="height:1px;background:rgba(255,255,255,0.02);margin:6px 0;border-radius:2px"></div>
+              <div style="font-size:12px;color:var(--muted)">Mode: <strong id="left-mode">Analog</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right joystick -->
+        <div class="stick-card" id="right-card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>Joystick Kanan</strong>
+            <small style="color:var(--muted)">2 axis</small>
+          </div>
+          <div class="stick-wrap">
+            <div class="axes">
+              <div class="axis-row">X: <span class="axis-value" id="right-x">0</span></div>
+              <div class="axis-row">Y: <span class="axis-value" id="right-y">0</span></div>
+              <div style="height:1px;background:rgba(255,255,255,0.02);margin:6px 0;border-radius:2px"></div>
+              <div style="font-size:12px;color:var(--muted)">Mode: <strong id="right-mode">Analog</strong></div>
+            </div>
+            <div class="stick" id="right-stick" data-side="right">
+              <div class="ring">
+                <div class="knob" id="right-knob">R</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- switches -->
+      <div style="margin-top:14px">
+        <strong>Switches (6)</strong>
+        <div class="switches" id="switches">
+          <div class="sw"><div>SW1</div><div class="toggle" data-id="1"><div class="dot"></div></div></div>
+          <div class="sw"><div>SW2</div><div class="toggle" data-id="2"><div class="dot"></div></div></div>
+          <div class="sw"><div>SW3</div><div class="toggle" data-id="3"><div class="dot"></div></div></div>
+          <div class="sw"><div>SW4</div><div class="toggle" data-id="4"><div class="dot"></div></div></div>
+          <div class="sw"><div>SW5</div><div class="toggle" data-id="5"><div class="dot"></div></div></div>
+          <div class="sw"><div>SW6</div><div class="toggle" data-id="6"><div class="dot"></div></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="right">
+      <div class="panel status">
+        <strong>Status & Output</strong>
+        <pre id="output">{
+  "left": {"x":0, "y":0},
+  "right": {"x":0, "y":0},
+  "switches": [0,0,0,0,0,0]
+}</pre>
+      </div>
+
+      <div class="panel status">
+        <strong>Controls</strong>
+        <p style="margin:8px 0;color:var(--muted);font-size:13px">Klik/drag joystick (mouse atau sentuh). Toggle switch untuk mengubah state. Nilai axis dalam rentang -100 sampai 100.</p>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="center-all" style="flex:1;padding:8px;border-radius:8px;background:#06222a;color:#bff7ff;border:0;cursor:pointer">Center All</button>
+          <button id="export-json" style="flex:1;padding:8px;border-radius:8px;background:#07324a;color:#bff7ff;border:0;cursor:pointer">Copy JSON</button>
+        </div>
+      </div>
+
+      <div class="panel status">
+        <strong>Notes</strong>
+        <p style="margin:8px 0;color:var(--muted);font-size:13px">Kalau mau kirim data ke server (WebSocket/HTTP/Serial), aku bisa tambahkan contoh kode JS untuk itu.</p>
+      </div>
+
+    </div>
+
+    <footer>Made for Ivan — dual joystick demo · drag / touch compatible</footer>
+  </div>
+
+  <script>
+    // Utility: clamp
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+    // Joystick factory
+    function makeJoystick(stickEl, knobEl, outXEl, outYEl){
+      const rect = {size:0, cx:0, cy:0, radius:0};
+      let active = false;
+      let id = null;
+
+      function recalc(){
+        const r = stickEl.getBoundingClientRect();
+        rect.size = Math.min(r.width, r.height);
+        rect.cx = r.left + r.width/2;
+        rect.cy = r.top + r.height/2;
+        rect.radius = Math.min(r.width, r.height)/2 - Math.max(knobEl.offsetWidth, knobEl.offsetHeight)/2 - 6;
+      }
+
+      function setKnob(px, py){
+        const dx = px - rect.cx;
+        const dy = py - rect.cy;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const r = rect.radius;
+        let nx = dx, ny = dy;
+        if(dist > r){ nx = dx * r / dist; ny = dy * r / dist; }
+        knobEl.style.transform = `translate(${nx}px, ${ny}px)`;
+        // map to -100..100
+        const vx = Math.round( clamp((nx / r) * 100, -100, 100) );
+        const vy = Math.round( clamp(( -ny / r) * 100, -100, 100) ); // invert Y so up positive
+        outXEl.textContent = vx;
+        outYEl.textContent = vy;
+        return {x:vx,y:vy};
+      }
+
+      function resetKnob(){
+        knobEl.style.transform = `translate(0px, 0px)`;
+        outXEl.textContent = 0; outYEl.textContent = 0;
+      }
+
+      // pointer events
+      function onPointerDown(e){
+        e.preventDefault();
+        active = true; id = e.pointerId; stickEl.setPointerCapture(id);
+        recalc();
+        const posx = e.clientX, posy = e.clientY;
+        const v = setKnob(posx,posy);
+        updateOutput();
+      }
+      function onPointerMove(e){
+        if(!active || e.pointerId !== id) return;
+        const posx = e.clientX, posy = e.clientY;
+        setKnob(posx,posy);
+        updateOutput();
+      }
+      function onPointerUp(e){
+        if(!active || e.pointerId !== id) return;
+        active = false; stickEl.releasePointerCapture(id); id = null;
+        // smoothly recentre
+        knobEl.style.transition = 'transform 120ms ease';
+        resetKnob();
+        setTimeout(()=> knobEl.style.transition='', 160);
+        updateOutput();
+      }
+
+      stickEl.addEventListener('pointerdown', onPointerDown);
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointercancel', onPointerUp);
+
+      // expose helper to get current values
+      function getValues(){
+        return {x: parseInt(outXEl.textContent,10)||0, y: parseInt(outYEl.textContent,10)||0};
+      }
+      function center(){ resetKnob(); }
+      function updateOnResize(){ recalc(); }
+
+      return {getValues, center, updateOnResize};
+    }
+
+    // wire up left/right
+    const leftStickEl = document.getElementById('left-stick');
+    const leftKnob = document.getElementById('left-knob');
+    const leftX = document.getElementById('left-x');
+    const leftY = document.getElementById('left-y');
+    const left = makeJoystick(leftStickEl, leftKnob, leftX, leftY);
+
+    const rightStickEl = document.getElementById('right-stick');
+    const rightKnob = document.getElementById('right-knob');
+    const rightX = document.getElementById('right-x');
+    const rightY = document.getElementById('right-y');
+    const right = makeJoystick(rightStickEl, rightKnob, rightX, rightY);
+
+    // switches
+    const switchEls = Array.from(document.querySelectorAll('.toggle'));
+    const switchState = [0,0,0,0,0,0];
+    switchEls.forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx = parseInt(el.dataset.id,10)-1;
+        switchState[idx] = switchState[idx] ? 0 : 1;
+        if(switchState[idx]) el.classList.add('on'); else el.classList.remove('on');
+        updateOutput();
+      });
+    });
+
+    // output area
+    const outPre = document.getElementById('output');
+    function updateOutput(){
+      const obj = { left:left.getValues(), right:right.getValues(), switches: switchState.slice() };
+      outPre.textContent = JSON.stringify(obj, null, 2);
+    }
+
+    // controls
+    document.getElementById('center-all').addEventListener('click', ()=>{ left.center(); right.center(); for(let i=0;i<6;i++){switchState[i]=0; switchEls[i].classList.remove('on')} updateOutput(); });
+    document.getElementById('export-json').addEventListener('click', ()=>{ navigator.clipboard.writeText(outPre.textContent).then(()=>{ alert('JSON disalin ke clipboard') }).catch(()=>{ alert('Gagal salin') }) });
+
+    // keep output fresh
+    setInterval(updateOutput, 120);
+    window.addEventListener('resize', ()=>{ left.updateOnResize(); right.updateOnResize(); });
+
+    // initial
+    updateOutput();
+  </script>
+</body>
+</html>

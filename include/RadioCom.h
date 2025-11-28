@@ -2,7 +2,6 @@
 
 #include <SPI.h>
 #include <RF24.h>
-// #include "NRF24Radio.h"  
 
 
 class NRF24Radio {
@@ -12,9 +11,7 @@ private:
 
 public:
     // Constructor
-    NRF24Radio(uint8_t cePin, uint8_t csnPin, const char* addr = "00001")
-        : radio(cePin, csnPin)
-    {
+    NRF24Radio(const byte cePin, const byte csnPin, const char* addr): radio(cePin, csnPin) {
         memcpy(address, addr, 6);
     }
 
@@ -55,7 +52,7 @@ public:
     }
 
     // Ganti address kapan saja
-    void setAddress(const char* addr) {
+    void setAddress(const char *addr) {
         memcpy(address, addr, 6);
         radio.openWritingPipe(address);
         radio.openReadingPipe(1, address);
